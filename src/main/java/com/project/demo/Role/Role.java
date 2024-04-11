@@ -9,9 +9,15 @@ import org.hibernate.annotations.UuidGenerator;
 @Table(name = "roles")
 public class Role {
 
+    /**.
+     * The id of the role
+     */
     @Id
     @UuidGenerator
     private String id;
 
+    /**.
+     * The name of the role
+     */
     private String name;
 }

@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -13,7 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author Tabnine
  */
-@RestController("/api/v1/roles")
+@RestController
+@RequestMapping(value = "/api/v1/roles")
 public class RoleController {
 
     private final RoleService roleService;
@@ -33,7 +36,7 @@ public class RoleController {
      * @param id the unique identifier of the role to be retrieved.
      * @return the Role object corresponding to the given id.
      */
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "roleId/{id}")
     public Role getRoleById(@PathVariable String id) {
         return roleService.findById(id);
     }
@@ -44,7 +47,7 @@ public class RoleController {
      * @param role the name of the role to be retrieved.
      * @return the Role object corresponding to the given name.
      */
-    @GetMapping(path = "/{role}")
+    @GetMapping(path = "role/{role}")
     public Role getRoleByName(@PathVariable String role) {
         return roleService.findByName(role);
     }
@@ -55,8 +58,8 @@ public class RoleController {
      * @param role the Role object to be created.
      * @return the newly created Role object.
      */
-    @PostMapping(path = "/")
-    public Role createRole(Role role) {
+    @PostMapping(path = "role")
+    public Role createRole(@RequestBody Role role) {
         return roleService.save(role);
     }
 

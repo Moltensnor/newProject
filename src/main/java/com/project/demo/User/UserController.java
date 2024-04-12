@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -18,7 +19,8 @@ import java.util.List;
  *
  * @author Tabnine
  */
-@RestController("/api/v1/users")
+@RestController
+@RequestMapping(path = "/api/v1/users")
 public class UserController {
 
     private final UserService userService;
@@ -40,7 +42,7 @@ public class UserController {
      *
      * @return An Iterable of User objects.
      */
-    @GetMapping(path = "/")
+    @GetMapping(path = "")
     public Iterable<User> getAllUsers() {
         return userService.getAllUsers();
     }
@@ -52,7 +54,7 @@ public class UserController {
      * @param id The id of the user to be retrieved.
      * @return A User object.
      */
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "id/{id}")
     public User getUserById(@PathVariable String id) {
         return userService.getUser(id);
     }
@@ -64,7 +66,7 @@ public class UserController {
      * @param username The username of the user to be retrieved.
      * @return A list of User objects.
      */
-    @GetMapping(path = "/{username}")
+    @GetMapping(path = "username/{username}")
     public List<User> getUserByUsername(@PathVariable String username) {
         return userService.getUserByUsername(username);
     }
@@ -76,7 +78,7 @@ public class UserController {
      * @param email The email of the user to be retrieved.
      * @return A list of User objects.
      */
-    @GetMapping(path = "/{email}")
+    @GetMapping(path = "email/{email}")
     public List<User> getUserByEmail(@PathVariable String email) {
         return userService.getUserByEmail(email);
     }
@@ -88,7 +90,7 @@ public class UserController {
      * @param user The User object to be created.
      * @return A User object.
      */
-    @PostMapping(path = "/")
+    @PostMapping(path = "")
     public User createUser(@RequestBody User user) {
         return userService.createUser(user);
     }

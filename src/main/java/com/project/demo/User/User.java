@@ -1,12 +1,16 @@
 package com.project.demo.User;
 
 import com.project.demo.Role.Role;
+import com.project.demo.passwords.Passwords;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import org.hibernate.annotations.UuidGenerator;
 
 /**
@@ -49,6 +53,17 @@ public class User {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private Set<Passwords> passwords = new LinkedHashSet<>();
+
+    public Set<Passwords> getPasswords() {
+        return passwords;
+    }
+
+    public void setPasswords(Set<Passwords> passwords) {
+        this.passwords = passwords;
+    }
 
     /**
      * Default constructor

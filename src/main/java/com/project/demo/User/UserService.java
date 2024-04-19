@@ -1,10 +1,12 @@
 package com.project.demo.User;
 
+import com.project.demo.passwords.Passwords;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * UserService class provides methods to interact with the UserRepository.

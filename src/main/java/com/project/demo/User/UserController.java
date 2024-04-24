@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * UserController class is a RESTful controller that handles HTTP requests related to users.
@@ -55,7 +56,7 @@ public class UserController {
      * @return A User object.
      */
     @GetMapping(path = "id/{id}")
-    public User getUserById(@PathVariable String id) {
+    public User getUserById(@PathVariable Long id) {
         return userService.getUser(id);
     }
 

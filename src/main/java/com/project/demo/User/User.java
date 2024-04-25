@@ -4,6 +4,8 @@ import com.project.demo.Role.Role;
 import com.project.demo.passwords.Passwords;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -11,6 +13,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.UUID;
+
 import org.hibernate.annotations.UuidGenerator;
 
 /**
@@ -24,8 +28,8 @@ public class User {
      * Unique identifier for the user
      */
     @Id
-    @UuidGenerator
-    private String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
 
     /**
      * Username of the user
@@ -54,17 +58,6 @@ public class User {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    private Set<Passwords> passwords = new LinkedHashSet<>();
-
-    public Set<Passwords> getPasswords() {
-        return passwords;
-    }
-
-    public void setPasswords(Set<Passwords> passwords) {
-        this.passwords = passwords;
-    }
-
     /**
      * Default constructor
      */
@@ -81,7 +74,7 @@ public class User {
      * @param enabled  whether the user is enabled or not
      * @param role     role of the user
      */
-    public User(String id, String username, String password, String email, Boolean enabled, Role role) {
+    public User(Long id, String username, String password, String email, Boolean enabled, Role role) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -95,7 +88,7 @@ public class User {
      *
      * @return unique identifier of the user
      */
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
@@ -104,7 +97,7 @@ public class User {
      *
      * @param id unique identifier of the user
      */
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

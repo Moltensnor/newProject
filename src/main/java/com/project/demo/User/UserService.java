@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * UserService class provides methods to interact with the UserRepository.
@@ -41,11 +42,11 @@ public class UserService {
      * @throws IllegalStateException if a user with the same id already exists
      */
     public User createUser(User user) {
-        Optional<User> userOptional = userRepository.findById(user.getId());
+        List<User> usersOptional = userRepository.findUsersByEmail(user.getEmail());
 
-        if (userOptional.isPresent()) {
+        if (!usersOptional.isEmpty()) {
             throw new IllegalStateException(
-                    "There is already a user with this id."
+                        "There is already a user with this email."
             );
         }
         return userRepository.save(user);
@@ -58,7 +59,7 @@ public class UserService {
      * @return the User object with the specified id
      * @throws IllegalStateException if no user with the specified id exists
      */
-    public User getUser(String id) {
+    public User getUser(Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
 
         if (optionalUser.isEmpty()) {
@@ -133,7 +134,7 @@ public class UserService {
      * @param id the id of the user to be deleted
      * @throws IllegalStateException if no user with the specified id exists
      */
-    public void deleteUser(String id) {
+    public void deleteUser(Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
 
         if (optionalUser.isEmpty()) {

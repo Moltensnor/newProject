@@ -6,6 +6,6 @@ export default function PassLayout({
   children: React.ReactNode;
 }) {
   return (
-      <body>{children}</body>
+      <div>{children}</div>
   );
 }

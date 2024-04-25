@@ -8,8 +8,8 @@ export default function Navbar() {
   const router = useRouter();
   const { user, error, isLoading } = useUser();
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>{error.message}</div>;
+  // if (isLoading) return <div>Loading...</div>;
+  // if (error) return <div>{error.message}</div>;
 
   if (user) {
     return (
@@ -45,10 +45,10 @@ export default function Navbar() {
       {/*Login*/}
       <div className="flex justify-self-end text-stark pt-6 h-20 text-4xl -right-0 w-2/12 gap-x-12">
         <div className="pt-2">
-          <Link href={"../api/auth/login"}>Login</Link>
+          <Link href={"../login"}>Login</Link>
         </div>
         <div className="rounded-full bg-jewel pl-4 pr-4 pt-2">
-          <Link href={"../api/auth/login"}>Register</Link>
+          <Link href={"../register"}>Register</Link>
         </div>
       </div>
     </div>

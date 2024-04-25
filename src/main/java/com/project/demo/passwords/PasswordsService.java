@@ -21,7 +21,7 @@ public class PasswordsService {
         return passwordRepository.findAll();
     }
 
-    public Passwords getPasswordById(Long id) {
+    public Passwords getPasswordById(UUID id) {
         Optional<Passwords> password = passwordRepository.findById(id);
 
         if (password.isEmpty()) {
@@ -33,7 +33,7 @@ public class PasswordsService {
         return password.get();
     }
 
-    public void deletePassword(Long id) {
+    public void deletePassword(UUID id) {
         Optional<Passwords> passwordsOptional = passwordRepository.findById(id);
 
         if (passwordsOptional.isEmpty()) {

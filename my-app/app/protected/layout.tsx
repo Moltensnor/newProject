@@ -1,46 +1,22 @@
-'use client'
-import Cookies from 'js-cookie'
-import jwt from 'jsonwebtoken'
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+"use client";
 
-function ProtectedPage({
-    children,
-  }: {
-    children: React.ReactNode;
-  }) {
-  const router = useRouter()
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
-  useEffect(() => {
-    const token = Cookies.get('token')
+function ProtectedPage({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+  const { user, isLoading, error } = useUser();
 
-    if (!token) {
-      router.replace('/') // If no token is found, redirect to login page
-      return
-    }
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>{error.message}</div>;
 
-    // Validate the token by making an API call
-    const validateToken = async () => {
-      try {
-        const res = await fetch('/api/protected', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+  if (user) {
+    return <div>{children}</div>;
+  }
 
-        if (!res.ok) throw new Error('Token validation failed')
-      } catch (error) {
-        console.error(error)
-        router.replace('/') // Redirect to login if token validation fails
-      }
-    }
-
-    validateToken()
-  }, [router])
-
-  return <div>
-    {children}
-  </div>
+  router.push("../")
+  return
 }
 
-export default ProtectedPage
+export default ProtectedPage;

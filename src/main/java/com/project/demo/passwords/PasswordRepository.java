@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface PasswordRepository extends JpaRepository<Passwords, Long> {
+public interface PasswordRepository extends JpaRepository<Passwords, UUID> {
 }

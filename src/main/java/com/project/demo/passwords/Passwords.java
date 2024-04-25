@@ -1,14 +1,9 @@
 package com.project.demo.passwords;
 
-import com.project.demo.User.User;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -25,8 +20,8 @@ public class Passwords {
      * Unique identifier for the password entry.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     /**
      * Name of the website or service associated with the password.
@@ -43,17 +38,15 @@ public class Passwords {
      */
     private String website;
 
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private String username;
 
     /**
      * Getter for the associated User object.
      *
      * @return The associated User object.
      */
-    public User getUser() {
-        return user;
+    public String getUser() {
+        return username;
     }
 
     /**
@@ -61,8 +54,8 @@ public class Passwords {
      *
      * @param user The User object to be associated with this password entry.
      */
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(String user) {
+        this.username = user;
     }
 
     /**
@@ -73,7 +66,7 @@ public class Passwords {
      * @param password    The actual password for the website or service.
      * @param website     The website or service associated with the password.
      */
-    public Passwords(Long id, String name, String password, String website) {
+    public Passwords(UUID id, String name, String password, String website) {
         this.id = id;
         this.name = name;
         this.password = password;
@@ -92,7 +85,7 @@ public class Passwords {
      *
      * @return The unique identifier of the password entry.
      */
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -101,7 +94,7 @@ public class Passwords {
      *
      * @param id The unique identifier of the password entry to be set.
      */
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

@@ -1,14 +1,7 @@
-export type User = {
+export type Password = {
     id: string,
-    username: string,
-    email: string,
+    name: string,
     password: string,
-    enabled: boolean,
-}
-
-export type dbUser = {
-    username: string,
-    email: string,
-    password: string,
-    enabled: boolean,
+    website: string,
+    username: string
 }

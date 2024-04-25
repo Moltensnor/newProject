@@ -28,7 +28,7 @@ public class PasswordsController {
     }
 
     @GetMapping(path = "id/{id}")
-    public Passwords getPasswordsById(@PathVariable Long id) {
+    public Passwords getPasswordsById(@PathVariable UUID id) {
         return passwordsService.getPasswordById(id);
     }
 
@@ -43,7 +43,7 @@ public class PasswordsController {
     }
 
     @DeleteMapping(path = "id/{id}")
-    public void deletePasswordsById(@PathVariable Long id) {
+    public void deletePasswordsById(@PathVariable UUID id) {
         passwordsService.deletePassword(id);
     }
 }

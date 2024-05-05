@@ -21,18 +21,19 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests((authorize) -> authorize
-                        .anyRequest()
-                        .authenticated()
-                )
-                .httpBasic(Customizer.withDefaults())
-                .formLogin((login) -> login
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login")
-                        .defaultSuccessUrl(
-                                "http://localhost:8080/admin/page/id/1",
-                                true)
-                        .permitAll())
+//                .authorizeHttpRequests((authorize) -> authorize
+//                        .anyRequest()
+//                        .authenticated()
+//                )
+//                .httpBasic(Customizer.withDefaults())
+//                .formLogin((login) -> login
+//                        .loginPage("/login")
+//                        .loginProcessingUrl("/login")
+//                        .defaultSuccessUrl(
+//                                "http://localhost:8080/admin/page/id/1",
+//                                true)
+//                        .permitAll())
+                .authorizeHttpRequests((authorize) -> authorize.anyRequest().permitAll())
                 .csrf().disable().headers().frameOptions().disable();
         return http.build();
     }

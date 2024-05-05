@@ -1,5 +1,6 @@
 package com.project.demo;
 
+import de.codecentric.boot.admin.server.config.AdminServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -11,29 +12,45 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final AdminServerProperties adminServer;
+
+    public SecurityConfig(AdminServerProperties adminServer) {
+        this.adminServer = adminServer;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http) throws Exception {
         http
-//                .authorizeHttpRequests((authorize) -> authorize
-//                        .anyRequest()
-//                        .authenticated()
-//                )
-//                .httpBasic(Customizer.withDefaults())
-//                .formLogin((login) -> login
-//                        .loginPage("/login")
-//                        .loginProcessingUrl("/login")
-//                        .defaultSuccessUrl(
-//                                "http://localhost:8080/admin/page/id/1",
-//                                true)
-//                        .permitAll())
-                .authorizeHttpRequests((authorize) -> authorize.anyRequest().permitAll())
+                .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers(new AntPathRequestMatcher(this.adminServer.path("/assets/**")))
+                        .permitAll()
+                .requestMatchers(new AntPathRequestMatcher(this.adminServer.path("/actuator/info")))
+                .permitAll()
+                .requestMatchers(new AntPathRequestMatcher(adminServer.path("/actuator/health")))
+                .permitAll()
+                .requestMatchers(new AntPathRequestMatcher(this.adminServer.path("/login")))
+                .permitAll()
+                        .anyRequest()
+                        .authenticated()
+                )
+                .httpBasic(Customizer.withDefaults())
+                .formLogin((login) -> login
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl(
+                                "http://localhost:8080/admin/page/id/1",
+                                true)
+                        .permitAll())
+//                .authorizeHttpRequests((authorize) -> authorize.anyRequest().permitAll())
                 .csrf().disable().headers().frameOptions().disable();
         return http.build();
     }

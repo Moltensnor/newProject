@@ -20,8 +20,8 @@ public class Passwords {
      * Unique identifier for the password entry.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
 
     /**
      * Name of the website or service associated with the password.
@@ -66,11 +66,12 @@ public class Passwords {
      * @param password    The actual password for the website or service.
      * @param website     The website or service associated with the password.
      */
-    public Passwords(UUID id, String name, String password, String website) {
+    public Passwords(Long id, String name, String password, String website, String username) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.website = website;
+        this.username = username;
     }
 
     /**
@@ -85,7 +86,7 @@ public class Passwords {
      *
      * @return The unique identifier of the password entry.
      */
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
@@ -94,7 +95,7 @@ public class Passwords {
      *
      * @param id The unique identifier of the password entry to be set.
      */
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -150,6 +151,14 @@ public class Passwords {
      */
     public void setWebsite(String website) {
         this.website = website;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     /**

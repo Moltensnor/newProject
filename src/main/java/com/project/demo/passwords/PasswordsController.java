@@ -1,6 +1,7 @@
 package com.project.demo.passwords;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,8 +29,13 @@ public class PasswordsController {
     }
 
     @GetMapping(path = "id/{id}")
-    public Passwords getPasswordsById(@PathVariable UUID id) {
+    public Passwords getPasswordsById(@PathVariable Long id) {
         return passwordsService.getPasswordById(id);
+    }
+
+    @GetMapping(path = "user/{username}")
+    public List<Passwords> getPasswordsByUsername(@PathVariable String username) {
+        return passwordsService.getPasswordsByUsername(username);
     }
 
     @PostMapping(path = "")
@@ -43,7 +49,12 @@ public class PasswordsController {
     }
 
     @DeleteMapping(path = "id/{id}")
-    public void deletePasswordsById(@PathVariable UUID id) {
+    public void deletePasswordsById(@PathVariable Long id) {
         passwordsService.deletePassword(id);
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public String handleException(Exception e) {
+        return e.getMessage();
     }
 }

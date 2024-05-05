@@ -21,7 +21,7 @@ public class PasswordsService {
         return passwordRepository.findAll();
     }
 
-    public Passwords getPasswordById(UUID id) {
+    public Passwords getPasswordById(Long id) {
         Optional<Passwords> password = passwordRepository.findById(id);
 
         if (password.isEmpty()) {
@@ -33,7 +33,7 @@ public class PasswordsService {
         return password.get();
     }
 
-    public void deletePassword(UUID id) {
+    public void deletePassword(Long id) {
         Optional<Passwords> passwordsOptional = passwordRepository.findById(id);
 
         if (passwordsOptional.isEmpty()) {
@@ -46,12 +46,14 @@ public class PasswordsService {
     }
 
     public Passwords createPassword(Passwords passwords) {
-        Optional<Passwords> passwordOptional = passwordRepository.findById(passwords.getId());
+        if (passwords.getId() != null) {
+            Optional<Passwords> passwordOptional = passwordRepository.findById(passwords.getId());
 
-        if (passwordOptional.isPresent()) {
-            throw new IllegalStateException(
-                    "There is already a password with this id."
-            );
+            if (passwordOptional.isPresent()) {
+                throw new IllegalStateException(
+                        "There is already a password with this id."
+                );
+            }
         }
 
         return passwordRepository.save(passwords);
@@ -59,5 +61,17 @@ public class PasswordsService {
 
     public Passwords updatePassword(Passwords passwords) {
         return passwordRepository.save(passwords);
+    }
+
+    public List<Passwords> getPasswordsByUsername(String username) {
+        List<Passwords> passwords = passwordRepository.findPasswordsByUsername(username);
+
+        if (passwords.isEmpty()) {
+            throw new IllegalStateException(
+                    "There is no password with username " + username
+            );
+        }
+
+        return passwords;
     }
 }

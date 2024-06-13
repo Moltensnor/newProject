@@ -3,12 +3,13 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { CircularProgress } from "@nextui-org/react";
 
 export default function Navbar() {
   const router = useRouter();
   const { user, isLoading, error} = useUser();
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <CircularProgress aria-label="Loading..." />;
   if (error) return <div>{error.message}</div>;
 
   console.log(user)
@@ -23,6 +24,7 @@ export default function Navbar() {
         {/*Main redirects*/}
         <div className="flex justify-self-end text-stark mt-8 h-20 text-4xl -right-0 w-4/12">
           <Link href={"../protected/passwords"}>Passwords</Link>
+          <Link href={"../protected/tasklist"}>Tasklist</Link>
         </div>
         {/*Login*/}
         <div className="flex justify-self-end text-stark pt-6 h-20 text-4xl -right-0 w-2/12 gap-x-12">
@@ -43,6 +45,7 @@ export default function Navbar() {
       {/*Main redirects*/}
       <div className="flex justify-self-end text-stark mt-8 h-20 text-4xl -right-0 w-4/12">
         <Link href={"../api/auth/login"}>Passwords</Link>
+        <Link href={"../protected/tasklist"}>Tasklist</Link>
       </div>
       {/*Login*/}
       <div className="flex justify-self-end text-stark pt-6 h-20 text-4xl -right-0 w-2/12 gap-x-12">

@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import PasswordMenu from "../components/passwordMenu/page";
 
 function ProtectedPage({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -12,11 +13,15 @@ function ProtectedPage({ children }: { children: React.ReactNode }) {
   if (error) return <div>{error.message}</div>;
 
   if (user) {
-    return <div>{children}</div>;
+    return (
+      <div>
+        {children}
+      </div>
+    );
   }
 
-  router.push("../")
-  return
+  router.push("../");
+  return;
 }
 
 export default ProtectedPage;

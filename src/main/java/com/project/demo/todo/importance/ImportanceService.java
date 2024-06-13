@@ -1,4 +1,4 @@
-package com.project.demo.importance;
+package com.project.demo.todo.importance;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

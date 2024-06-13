@@ -1,12 +1,9 @@
-package com.project.demo.importance;
+package com.project.demo.todo.importance;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import org.springframework.data.relational.core.query.CriteriaDefinition;
 
 import java.util.Comparator;
 

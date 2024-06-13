@@ -8,7 +8,8 @@ import {
   Button,
   Link,
 } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Key, useEffect, useState } from "react";
 
 export default function TasklistHomePage() {
   const [loading, setLoading] = useState(true);
@@ -16,6 +17,11 @@ export default function TasklistHomePage() {
     { id: -1, name: "", userEmail: "", date: "", description: "" },
   ]);
   const { user, isLoading, error } = useUser();
+  const router = useRouter()
+
+  const onSelectionChange = (taskListId: Key) => {
+    router.push("./tasklist/" + taskListId)
+  }
 
   async function getData() {
     const headers = new Headers();
@@ -50,6 +56,7 @@ export default function TasklistHomePage() {
           color="primary"
           label="Select a tasklist"
           className="max-w-[140vh]"
+          onSelectionChange={onSelectionChange}
         >
           {taskLists.map((tasklist) => (
             <AutocompleteItem key={tasklist.id} value={tasklist.id}>

@@ -2,7 +2,12 @@
 
 import { TaskList } from "@/app/lib/types";
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { Autocomplete, AutocompleteItem } from "@nextui-org/react";
+import {
+  Autocomplete,
+  AutocompleteItem,
+  Button,
+  Link,
+} from "@nextui-org/react";
 import { useEffect, useState } from "react";
 
 export default function TasklistHomePage() {
@@ -18,6 +23,7 @@ export default function TasklistHomePage() {
       "Authorization",
       "Basic " + Buffer.from("admin:password").toString("base64")
     );
+
     const req = await fetch("http://localhost:8080/api/v1/todolist/", {
       cache: "no-store",
       method: "GET",
@@ -37,14 +43,26 @@ export default function TasklistHomePage() {
   if (error) return <div>{error.message}</div>;
 
   return (
-    <div className="flex w-full flex-wrap md:flex-nowrap justify-around gap-4 pt-10">
-      <Autocomplete variant="bordered" color="primary" label="Select a tasklist" className="max-w-[140vh]">
-        {taskLists.map((tasklist) => (
-          <AutocompleteItem key={tasklist.id} value={tasklist.id}>
-            {tasklist.name}
-          </AutocompleteItem>
-        ))}
-      </Autocomplete>
-    </div>
+    <>
+      <div className="flex w-full flex-wrap md:flex-nowrap justify-around gap-4 pt-10">
+        <Autocomplete
+          variant="bordered"
+          color="primary"
+          label="Select a tasklist"
+          className="max-w-[140vh]"
+        >
+          {taskLists.map((tasklist) => (
+            <AutocompleteItem key={tasklist.id} value={tasklist.id}>
+              {tasklist.name}
+            </AutocompleteItem>
+          ))}
+        </Autocomplete>
+      </div>
+      <div className="flex flex-wrap flex-row justify-around pt-[50vh] pb-8">
+        <Link href="/protected/tasklist/new">
+          <Button color="success">add new list</Button>
+        </Link>
+      </div>
+    </>
   );
 }

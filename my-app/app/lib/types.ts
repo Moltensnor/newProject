@@ -27,3 +27,10 @@ export type TaskList = {
     date: string,
     description: string,
 }
+
+export type NewTaskList = {
+    name: string,
+    userEmail: string,
+    date: string,
+    description: string,
+}

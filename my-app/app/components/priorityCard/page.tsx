@@ -6,6 +6,7 @@ import {
   Divider,
   ScrollShadow,
 } from "@nextui-org/react";
+import Link from "next/link";
 
 export default function PriorityCard(props: any) {
   var importanceLevel = 0;
@@ -39,10 +40,16 @@ export default function PriorityCard(props: any) {
                 (t: Task) => t!.importance.importanceLevels == importanceLevel
               )
               .map((e: Task) => (
-                <div key={e!.id} className="flex flex-row min-w-[60vh] mb-1 justify-items-stretch">
+                <Link key={e!.id} href={`/protected/tasklist/${e!.todoList.id}/${e!.id}`} >
+                  <div
+                    className="flex flex-row min-w-[60vh] mb-1 justify-items-stretch"
+                  >
                     <p className="text-md justify-self-start">{e!.name}</p>
-                    <p className="text-md right-16 absolute">{e!.importance.weight}</p>
-                </div>
+                    <p className="text-md right-16 absolute">
+                      {e!.importance.weight}
+                    </p>
+                  </div>
+                </Link>
               ))}
           </ScrollShadow>
         </CardBody>

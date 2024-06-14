@@ -36,6 +36,8 @@ public class TodoItem {
      */
     private String description;
 
+    private boolean isComplete;
+
     /**
      * The Importance of the TodoItem.
      */
@@ -62,13 +64,15 @@ public class TodoItem {
      * @param id          the primary key of the TodoItem
      * @param name        the name of the TodoItem
      * @param description the description of the TodoItem
+     * @param isComplete  whether the TodoItem is complete
      * @param importance  the Importance of the TodoItem
-     * @param todoList    the TodoList to which the TodoItem belongs
+     * @param todoList     the TodoList to which the TodoItem belongs
      */
-    public TodoItem(Long id, String name, String description, Importance importance, TodoList todoList) {
+    public TodoItem(Long id, String name, String description, boolean isComplete, Importance importance, TodoList todoList) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.isComplete = isComplete;
         this.importance = importance;
         this.todoList = todoList;
     }
@@ -164,9 +168,27 @@ public class TodoItem {
     }
 
     /**
+     * Check if the TodoItem is complete.
+     *
+     * @return true if the TodoItem is complete, false otherwise
+     */
+    public boolean isComplete() {
+        return isComplete;
+    }
+
+    /**
+     * Set the completion status of the TodoItem.
+     *
+     * @param complete true if the TodoItem is complete, false otherwise
+     */
+    public void setComplete(boolean complete) {
+        isComplete = complete;
+    }
+
+    /**
      * Checks if the given object is equal to this TodoItem.
      *
-     * @param o the object to compare with this TodoItem
+     * @param o the object to compare with
      * @return true if the given object is equal to this TodoItem, false otherwise
      */
     @Override
@@ -174,7 +196,7 @@ public class TodoItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TodoItem todoItem = (TodoItem) o;
-        return Objects.equals(id, todoItem.id) && Objects.equals(name, todoItem.name) && Objects.equals(description, todoItem.description) && Objects.equals(importance, todoItem.importance) && Objects.equals(todoList, todoItem.todoList);
+        return isComplete == todoItem.isComplete && Objects.equals(id, todoItem.id) && Objects.equals(name, todoItem.name) && Objects.equals(description, todoItem.description) && Objects.equals(importance, todoItem.importance) && Objects.equals(todoList, todoItem.todoList);
     }
 
     /**
@@ -184,7 +206,7 @@ public class TodoItem {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, importance, todoList);
+        return Objects.hash(id, name, description, isComplete, importance, todoList);
     }
 
     /**
@@ -198,6 +220,7 @@ public class TodoItem {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", isComplete=" + isComplete +
                 ", importance=" + importance +
                 ", todoList=" + todoList +
                 '}';

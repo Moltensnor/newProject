@@ -11,8 +11,6 @@ export default function Navbar() {
 
   if (isLoading) return <CircularProgress aria-label="Loading..." />;
   if (error) return <div>{error.message}</div>;
-
-  console.log(user)
   
   if (user) {
     return (

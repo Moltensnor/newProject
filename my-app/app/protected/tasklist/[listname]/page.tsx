@@ -63,7 +63,6 @@ export default function Tasklist({ params }: { params: { listname: string } }) {
 
   if (isLoading) return <div>Loading...</div>;
 
-  console.log(tasks!.filter((t) => t!.importance.importanceLevels == 2));
   return (
     <>
       <div className="flex flex-wrap flex-row pt-8 ml-8">

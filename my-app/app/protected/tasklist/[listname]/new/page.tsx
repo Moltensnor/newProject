@@ -41,6 +41,7 @@ export default function NewListItem({
       description: desc,
       importance: imp,
       todoList: taskList!,
+      complete: false,
     };
 
     console.log(taskListItem);

@@ -18,6 +18,7 @@ export type Task = {
     description: string,
     importance: Importance,
     todoList: TaskList,
+    complete: boolean,
 } | undefined
 
 export type TaskList = {
@@ -45,4 +46,5 @@ export type NewTask = {
     description: string,
     importance: Importance,
     todoList: TaskList,
+    complete: boolean,
 }

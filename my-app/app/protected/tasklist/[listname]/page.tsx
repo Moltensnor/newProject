@@ -1,6 +1,7 @@
 "use client";
 
 import PriorityCard from "@/app/components/priorityCard/page";
+import { deleteRequestCall } from "@/app/lib/APICalls";
 import { Task, TaskList } from "@/app/lib/types";
 import {
   Button,
@@ -26,6 +27,11 @@ export default function Tasklist({ params }: { params: { listname: string } }) {
     "Authorization",
     "Basic " + Buffer.from("admin:password").toString("base64")
   );
+
+  async function deleteList() {
+    await deleteRequestCall("http://localhost:8080/api/v1/todolist/" + params.listname)
+    router.push("/protected/tasklist")
+  }
 
   async function getTaskList() {
     const req = await fetch(
@@ -59,6 +65,7 @@ export default function Tasklist({ params }: { params: { listname: string } }) {
 
   useEffect(() => {
     getTaskList();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (isLoading) return <div>Loading...</div>;
@@ -69,7 +76,8 @@ export default function Tasklist({ params }: { params: { listname: string } }) {
         <Link href="./">
           <Button color="danger">Back</Button>
         </Link>
-        <div>{tasklist?.name}</div>
+        <div className="place-self-center pl-[78vh] pr-[81vh] text-5xl">{tasklist?.name}</div>
+        <Button className="" color="danger" onClick={() => deleteList()}>Delete</Button>
       </div>
       <div className="flex flex-wrap flex-row justify-around pt-8">
         <PriorityCard priority="Low" tasks={tasks} />
@@ -83,9 +91,6 @@ export default function Tasklist({ params }: { params: { listname: string } }) {
           onClick={() => router.push(params.listname + "/new")}
         >
           Add new item
-        </Button>
-        <Button className="min-w-[90vh]" color="danger">
-          Delete item
         </Button>
       </div>
     </>

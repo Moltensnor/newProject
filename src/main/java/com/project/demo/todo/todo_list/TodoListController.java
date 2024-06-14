@@ -1,5 +1,7 @@
 package com.project.demo.todo.todo_list;
 
+import com.project.demo.todo.todo_item.TodoItem;
+import com.project.demo.todo.todo_item.TodoItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -13,15 +15,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/todolist")
 public class TodoListController {
 
     private final TodoListService service;
 
+    private final TodoItemService itemService;
+
     @Autowired
-    public TodoListController(TodoListService service) {
+    public TodoListController(TodoListService service, TodoItemService itemService) {
         this.service = service;
+        this.itemService = itemService;
     }
 
     @GetMapping(path = "/")
@@ -46,6 +54,14 @@ public class TodoListController {
 
     @DeleteMapping(path = "/{id}")
     public void deleteTodoListById(@PathVariable Long id) {
+        Iterable<TodoItem> list = itemService.getTodoItemsByTodoListId(id);
+        List<TodoItem> items = new ArrayList<>();
+        list.iterator().forEachRemaining(items::add);
+
+        for (TodoItem item : items) {
+            itemService.deleteTodoItemById(item.getId());
+        }
+
         service.deleteTodoListById(id);
     }
 

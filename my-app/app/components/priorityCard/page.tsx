@@ -29,7 +29,8 @@ export default function PriorityCard(props: any) {
         <CardHeader className="flex gap-3">
           <div className="flex flex-row">
             <p className="text-md mr-[35vh]">{props.priority} priority</p>
-            <p className="text-small right-12 absolute">Weight</p>
+            <p className="text-small right-28 absolute">Weight</p>
+            <p className="text-small right-6 absolute">Completed</p>
           </div>
         </CardHeader>
         <Divider />
@@ -40,14 +41,21 @@ export default function PriorityCard(props: any) {
                 (t: Task) => t!.importance.importanceLevels == importanceLevel
               )
               .map((e: Task) => (
-                <Link key={e!.id} href={`/protected/tasklist/${e!.todoList.id}/${e!.id}`} >
-                  <div
-                    className="flex flex-row min-w-[60vh] mb-1 justify-items-stretch"
-                  >
+                <Link
+                  key={e!.id}
+                  href={`/protected/tasklist/${e!.todoList.id}/${e!.id}`}
+                  className="hover:underline"
+                >
+                  <div className="flex flex-row min-w-[60vh] mb-1 justify-items-stretch">
                     <p className="text-md justify-self-start">{e!.name}</p>
-                    <p className="text-md right-16 absolute">
+                    <p className="text-md right-32 absolute">
                       {e!.importance.weight}
                     </p>
+                    {e!.complete ? (
+                      <p className="right-12 absolute text-green-500">Yes</p>
+                    ) : (
+                      <p className="right-[3.10rem] absolute text-red-500">No</p>
+                    )}
                   </div>
                 </Link>
               ))}

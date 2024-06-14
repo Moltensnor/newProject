@@ -102,8 +102,7 @@ export default function ItemInfoPage({
       "http://localhost:8080/api/v1/importance/",
       newImportance
     );
-    const res = await req.json();
-    return res;
+    return req;
   }
 
   async function deleteItem() {

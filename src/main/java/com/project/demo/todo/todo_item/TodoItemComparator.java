@@ -6,6 +6,6 @@ public class TodoItemComparator implements Comparator<TodoItem> {
 
     @Override
     public int compare(TodoItem o1, TodoItem o2) {
-        return o1.getImportance().compareTo(o2.getImportance());
+        return o2.getImportance().compareTo(o1.getImportance());
     }
 }

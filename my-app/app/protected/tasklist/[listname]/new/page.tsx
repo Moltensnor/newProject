@@ -18,11 +18,6 @@ export default function NewListItem({
   const [taskList, setTaskList] = useState<TaskList>();
   const [isLoading, setLoading] = useState(true);
   const router = useRouter();
-  var imp: Importance = {
-    id: 202,
-    weight: 1,
-    importanceLevels: 2,
-  }
 
   const headers = new Headers();
   headers.set(
@@ -33,7 +28,7 @@ export default function NewListItem({
   postHeader.append("Content-Type", "application/json");
 
   async function addNewItem() {
-    await getImportanceIfExists();
+    const imp = await getImportanceIfExists();
     await getTaskList();
 
     var taskListItem: NewTask = {
@@ -91,14 +86,12 @@ export default function NewListItem({
 
     if (req.status == 400) {
       console.log("Adding new importance");
-      createImportance(weightNumber, importanceNumber);
+      return createImportance(weightNumber, importanceNumber);
     } else {
       const res = await req.json();
-      console.log(imp)
-      setImportance(imp);
-      imp = res
-      console.log(importance);
+      setImportance(res);
       setLoading(false);
+      return res;
     }
   }
 
@@ -117,8 +110,8 @@ export default function NewListItem({
       body: JSON.stringify(newImportance),
     });
     const res = await req.json();
-    imp = res
     setImportance(res);
+    return res;
   }
 
   async function getTaskList() {
@@ -138,14 +131,14 @@ export default function NewListItem({
 
   useEffect(() => {
     getTaskList();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (isLoading) return <div>Loading...</div>;
 
   return (
     <>
-      <div className="flex w-full flex-wrap justify-around gap-4 pt-10 pl-8 pr-8 pb-[50vh]">
+      <div className="flex w-full flex-wrap justify-around gap-4 pt-10 pl-8 pr-8 pb-[35vh]">
         <Input
           type="text"
           variant="bordered"
@@ -183,9 +176,11 @@ export default function NewListItem({
         </RadioGroup>
       </div>
       <div className="flex justify-around">
-        <Button className="min-w-[90vh]" color="danger">
-          <Link href="./">Back</Link>
-        </Button>
+        <Link href={`/protected/tasklist/${taskList?.id}`}>
+          <Button className="min-w-[90vh]" color="danger">
+            Back
+          </Button>
+        </Link>
         <Button
           className="min-w-[90vh]"
           color="success"

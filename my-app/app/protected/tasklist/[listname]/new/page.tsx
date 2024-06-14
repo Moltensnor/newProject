@@ -137,6 +137,7 @@ export default function NewListItem({
 
   useEffect(() => {
     getTaskList();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (isLoading) return <div>Loading...</div>;

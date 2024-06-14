@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import { TaskList } from "@/app/lib/types";
+import { Task, TaskList } from "@/app/lib/types";
 import {
   Button,
   Card,
@@ -14,41 +14,61 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function Tasklist({ params}: { params: { listname: string}}) {
-  const [tasklist, setTaskList] = useState<TaskList>()
-  const [isLoading, setLoading] = useState(true)
-  const router = useRouter()
+export default function Tasklist({ params }: { params: { listname: string } }) {
+  const [tasklist, setTaskList] = useState<TaskList>();
+  const [tasks, setTasks] = useState<[Task]>();
+  const [isLoading, setLoading] = useState(true);
+  const router = useRouter();
+
+  const headers = new Headers();
+  headers.set(
+    "Authorization",
+    "Basic " + Buffer.from("admin:password").toString("base64")
+  );
 
   async function getTaskList() {
-    const headers = new Headers();
-    headers.set(
-      "Authorization",
-      "Basic " + Buffer.from("admin:password").toString("base64")
+    const req = await fetch(
+      "http://localhost:8080/api/v1/todolist/" + params.listname,
+      {
+        cache: "no-store",
+        method: "GET",
+        headers: headers,
+      }
     );
+    const res = await req.json()
 
-    const req = await fetch("http://localhost:8080/api/v1/todolist/" + params.listname, {
-      cache: "no-store",
-      method: "GET",
-      headers: headers,
-    });
-    const res = await req.json();
+    setTaskList(res);
+    getTasksSorted(res);
+  }
 
-    console.log(res)
+  async function getTasksSorted(list: TaskList) {
+    const req = await fetch(
+      "http://localhost:8080/api/v1/todoitem/list/" + list.id + "/sorted",
+      {
+        cache: "no-store",
+        method: "GET",
+        headers: headers,
+      }
+    )
 
-    setTaskList(res)
-    setLoading(false)
+    const res = await req.json()
+    setTasks(res);
+    setLoading(false);
   }
 
   useEffect(() => {
     getTaskList();
-  }, [])
+  }, []);
 
   if (isLoading) return <div>Loading...</div>;
 
+  console.log(tasks!.filter((t) => t!.importance.importanceLevels == 2))
   return (
     <>
       <div className="flex flex-wrap flex-row pt-8 ml-8">
-        <Link href="./"><Button color="danger">Back</Button></Link>
+        <Link href="./">
+          <Button color="danger">Back</Button>
+        </Link>
         <div>{tasklist?.name}</div>
       </div>
       <div className="flex flex-wrap flex-row justify-around pt-8">
@@ -60,7 +80,13 @@ export default function Tasklist({ params}: { params: { listname: string}}) {
           </CardHeader>
           <Divider />
           <CardBody>
-            <ScrollShadow hideScrollBar className="h-[55vh]"></ScrollShadow>
+            <ScrollShadow hideScrollBar className="h-[55vh]">
+              {tasks!.filter((t) => t!.importance.importanceLevels == 1).map((e: Task) => (
+                <div key={e!.id}>
+                  {e!.name}
+                </div>
+              ))}
+            </ScrollShadow>
           </CardBody>
           <Divider />
         </Card>
@@ -73,7 +99,13 @@ export default function Tasklist({ params}: { params: { listname: string}}) {
           </CardHeader>
           <Divider />
           <CardBody>
-            <ScrollShadow hideScrollBar className="h-[55vh]"></ScrollShadow>
+            <ScrollShadow hideScrollBar className="h-[55vh]">
+            {tasks!.filter((t) => t!.importance.importanceLevels == 2).map((e: Task) => (
+                <div key={e!.id}>
+                  {e!.name}
+                </div>
+              ))}
+            </ScrollShadow>
           </CardBody>
           <Divider />
         </Card>
@@ -86,13 +118,23 @@ export default function Tasklist({ params}: { params: { listname: string}}) {
           </CardHeader>
           <Divider />
           <CardBody>
-            <ScrollShadow hideScrollBar className="h-[55vh]"></ScrollShadow>
+            <ScrollShadow hideScrollBar className="h-[55vh]">
+            {tasks!.filter((t) => t!.importance.importanceLevels == 3).map((e: Task) => (
+                <div key={e!.id}>
+                  {e!.name}
+                </div>
+              ))}
+            </ScrollShadow>
           </CardBody>
           <Divider />
         </Card>
       </div>
       <div className="flex flex-wrap flex-row justify-around mt-4 mb-4">
-        <Button className="min-w-[90vh]" color="success" onClick={() => router.push(params.listname + "/new")}>
+        <Button
+          className="min-w-[90vh]"
+          color="success"
+          onClick={() => router.push(params.listname + "/new")}
+        >
           Add new item
         </Button>
         <Button className="min-w-[90vh]" color="danger">

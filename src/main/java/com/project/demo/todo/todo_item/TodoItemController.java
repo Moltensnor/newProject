@@ -36,6 +36,11 @@ public class TodoItemController {
         return todoItemService.getTodoItemsByTodoListId(id);
     }
 
+    @GetMapping(path = "/list/{id}/sorted")
+    public Iterable<TodoItem> getTodoItemsByListIdSorted(@PathVariable Long id) {
+        return todoItemService.getTodoItemsByTodoListIdSorted(id);
+    }
+
     @PostMapping("/")
     public TodoItem createTodoItem(@RequestBody TodoItem todoItem) {
         return todoItemService.saveTodoItem(todoItem);

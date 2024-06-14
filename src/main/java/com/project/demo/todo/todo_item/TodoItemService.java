@@ -3,6 +3,12 @@ package com.project.demo.todo.todo_item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class TodoItemService {
 
@@ -31,5 +37,15 @@ public class TodoItemService {
 
     public Iterable<TodoItem> getTodoItemsByTodoListId(Long todoListId) {
         return todoItemRepository.findByTodoList_Id(todoListId);
+    }
+
+    public Iterable<TodoItem> getTodoItemsByTodoListIdSorted(Long todoListId) {
+        List<TodoItem> todoItemList = todoItemRepository.findByTodoList_Id(todoListId);
+        TodoItemComparator todoItemComparator = new TodoItemComparator();
+
+
+        todoItemList.sort(todoItemComparator);
+
+        return  todoItemList;
     }
 }

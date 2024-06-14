@@ -18,7 +18,7 @@ export type Task = {
     description: string,
     importance: Importance,
     todoList: TaskList,
-}
+} | undefined
 
 export type TaskList = {
     id: number,

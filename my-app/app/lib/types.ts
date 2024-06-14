@@ -7,17 +7,17 @@ export type Password = {
 }
 
 export type Importance = {
-    id: string,
+    id: number,
     weight: number,
-    level: number,
+    importanceLevels: number,
 }
 
 export type Task = {
     id: string,
-    email: string,
     name: string,
     description: string,
     importance: Importance,
+    todoList: TaskList,
 }
 
 export type TaskList = {
@@ -33,4 +33,16 @@ export type NewTaskList = {
     userEmail: string,
     date: string,
     description: string,
+}
+
+export type NewImportance = {
+    weight: number,
+    importanceLevels: number,
+}
+
+export type NewTask = {
+    name: string,
+    description: string,
+    importance: Importance,
+    todoList: TaskList,
 }

@@ -11,11 +11,13 @@ import {
   Link,
   ScrollShadow,
 } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Tasklist({ params}: { params: { listname: string}}) {
   const [tasklist, setTaskList] = useState<TaskList>()
   const [isLoading, setLoading] = useState(true)
+  const router = useRouter()
 
   async function getTaskList() {
     const headers = new Headers();
@@ -90,7 +92,7 @@ export default function Tasklist({ params}: { params: { listname: string}}) {
         </Card>
       </div>
       <div className="flex flex-wrap flex-row justify-around mt-4 mb-4">
-        <Button className="min-w-[90vh]" color="success">
+        <Button className="min-w-[90vh]" color="success" onClick={() => router.push(params.listname + "/new")}>
           Add new item
         </Button>
         <Button className="min-w-[90vh]" color="danger">

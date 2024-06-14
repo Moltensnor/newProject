@@ -16,14 +16,8 @@ public class ImportanceService {
         this.importanceRepository = importanceRepository;
     }
 
-    public List<Importance> getAllImportance() {
-        List<Importance> importanceList = importanceRepository.findAll();
-
-        if (importanceList.isEmpty()) {
-            throw new IllegalStateException("There is no importance in the database");
-        }
-
-        return importanceList;
+    public Iterable<Importance> getAllImportance() {
+        return importanceRepository.findAll();
     }
 
     public Importance addImportance(Importance importance) {

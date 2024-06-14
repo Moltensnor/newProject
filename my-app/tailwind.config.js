@@ -1,15 +1,17 @@
+const { nextui } = require("@nextui-org/theme");
 const config = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     colors: {
-      'void': '#0E0B16',
-      'fuschia': '#A239CA',
-      'jewel': '#4717F6',
-      'stark': '#E7DFDD'
+      void: "#0E0B16",
+      fuschia: "#A239CA",
+      jewel: "#4717F6",
+      stark: "#E7DFDD",
     },
     extend: {
       backgroundImage: {
@@ -19,7 +21,14 @@ const config = {
       },
     },
   },
-  plugins: [],
+  darkMode: "class",
+  plugins: [nextui({
+    colors: {
+      primary: {
+        DEFAULT: "#0E0B16",
+      }
+    }
+  })],
 };
 
 export default config;

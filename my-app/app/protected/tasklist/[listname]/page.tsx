@@ -1,5 +1,6 @@
 "use client";
 
+import PriorityCard from "@/app/components/priorityCard/page";
 import { Task, TaskList } from "@/app/lib/types";
 import {
   Button,
@@ -35,7 +36,7 @@ export default function Tasklist({ params }: { params: { listname: string } }) {
         headers: headers,
       }
     );
-    const res = await req.json()
+    const res = await req.json();
 
     setTaskList(res);
     getTasksSorted(res);
@@ -49,9 +50,9 @@ export default function Tasklist({ params }: { params: { listname: string } }) {
         method: "GET",
         headers: headers,
       }
-    )
+    );
 
-    const res = await req.json()
+    const res = await req.json();
     setTasks(res);
     setLoading(false);
   }
@@ -62,7 +63,7 @@ export default function Tasklist({ params }: { params: { listname: string } }) {
 
   if (isLoading) return <div>Loading...</div>;
 
-  console.log(tasks!.filter((t) => t!.importance.importanceLevels == 2))
+  console.log(tasks!.filter((t) => t!.importance.importanceLevels == 2));
   return (
     <>
       <div className="flex flex-wrap flex-row pt-8 ml-8">
@@ -72,62 +73,9 @@ export default function Tasklist({ params }: { params: { listname: string } }) {
         <div>{tasklist?.name}</div>
       </div>
       <div className="flex flex-wrap flex-row justify-around pt-8">
-        <Card className="max-w-[60vh] min-h-[60vh] min-w-[60vh]">
-          <CardHeader className="flex gap-3">
-            <div className="flex flex-col">
-              <p className="text-md">Low priority</p>
-            </div>
-          </CardHeader>
-          <Divider />
-          <CardBody>
-            <ScrollShadow hideScrollBar className="h-[55vh]">
-              {tasks!.filter((t) => t!.importance.importanceLevels == 1).map((e: Task) => (
-                <div key={e!.id}>
-                  {e!.name}
-                </div>
-              ))}
-            </ScrollShadow>
-          </CardBody>
-          <Divider />
-        </Card>
-        <Card className="max-w-[60vh] min-h-[60vh] min-w-[60vh]">
-          <CardHeader className="flex gap-3">
-            <div className="flex flex-col">
-              <p className="text-md">Medium priority</p>
-              <p className="text-small text-default-500"></p>
-            </div>
-          </CardHeader>
-          <Divider />
-          <CardBody>
-            <ScrollShadow hideScrollBar className="h-[55vh]">
-            {tasks!.filter((t) => t!.importance.importanceLevels == 2).map((e: Task) => (
-                <div key={e!.id}>
-                  {e!.name}
-                </div>
-              ))}
-            </ScrollShadow>
-          </CardBody>
-          <Divider />
-        </Card>
-        <Card className="max-w-[60vh] min-h-[60vh] min-w-[60vh]">
-          <CardHeader className="flex gap-3">
-            <div className="flex flex-col">
-              <p className="text-md">High priority</p>
-              <p className="text-small text-default-500"></p>
-            </div>
-          </CardHeader>
-          <Divider />
-          <CardBody>
-            <ScrollShadow hideScrollBar className="h-[55vh]">
-            {tasks!.filter((t) => t!.importance.importanceLevels == 3).map((e: Task) => (
-                <div key={e!.id}>
-                  {e!.name}
-                </div>
-              ))}
-            </ScrollShadow>
-          </CardBody>
-          <Divider />
-        </Card>
+        <PriorityCard priority="Low" tasks={tasks} />
+        <PriorityCard priority="Medium" tasks={tasks} />
+        <PriorityCard priority="High" tasks={tasks} />
       </div>
       <div className="flex flex-wrap flex-row justify-around mt-4 mb-4">
         <Button

@@ -1,0 +1,49 @@
+package com.project.demo.costcalculator.cost_list;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping(path = "/api/v1/costlist")
+public class CostListController {
+
+    private final CostListService service;
+
+    @Autowired
+    public CostListController(CostListService service) {
+        this.service = service;
+    }
+
+    @GetMapping(path = "/")
+    public Iterable<CostList> getAllCostList() {
+        return service.findAll();
+    }
+
+    @GetMapping(path = "/{id}")
+    public CostList getCostListById(@PathVariable Long id) {
+        return service.findById(id);
+    }
+
+    @PostMapping(path = "/")
+    public CostList createCostList(@RequestBody CostList costList) {
+        return service.save(costList);
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public void deleteCostListById(@PathVariable Long id) {
+        service.deleteById(id);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleException() {
+        return ResponseEntity.badRequest().build();
+    }
+}

@@ -1,6 +1,8 @@
 package com.project.demo.costcalculator.cost_list;
 
+import com.project.demo.costcalculator.cost_group.CostGroup;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,6 +42,21 @@ public class CostListController {
     @DeleteMapping(path = "/{id}")
     public void deleteCostListById(@PathVariable Long id) {
         service.deleteById(id);
+    }
+
+    @GetMapping(path = "/countGroup/{id}")
+    public Iterable<Pair<CostGroup, Pair<Long, Double>>> countTotalCostPerGroupById(@PathVariable Long id) {
+        return service.countTotalCostPerGroupById(id);
+    }
+
+    @GetMapping(path = "/countTotalCost/{id}")
+    public Long countTotalCostById(@PathVariable Long id) {
+        return service.countTotalCostById(id);
+    }
+
+    @GetMapping(path = "/countTotalCost/budget/{id}")
+    public Iterable<Pair<CostGroup, Pair<Long, Pair<Double, Double>>>> countTotalCostByBudget(@PathVariable Long id) {
+        return service.countTotalCostWithBudgetByGroupId(id);
     }
 
     @ExceptionHandler

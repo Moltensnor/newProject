@@ -5,13 +5,7 @@ import { deleteRequestCall } from "@/app/lib/APICalls";
 import { Task, TaskList } from "@/app/lib/types";
 import {
   Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Divider,
   Link,
-  ScrollShadow,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

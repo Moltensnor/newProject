@@ -1,6 +1,6 @@
 package com.project.demo.costcalculator.cost_group;
 
-import com.project.demo.todo.todo_list.TodoList;
+import com.project.demo.costcalculator.cost_list.CostList;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,12 +25,12 @@ public class CostGroup {
 
     @ManyToOne
     @JoinColumn(name = "CostList_id", nullable = false)
-    private TodoList costList;
+    private CostList costList;
 
     public CostGroup() {
     }
 
-    public CostGroup(Long id, String name, String hexcode, Long budget, TodoList costList) {
+    public CostGroup(Long id, String name, String hexcode, Long budget, CostList costList) {
         this.id = id;
         this.name = name;
         this.hexcode = hexcode;
@@ -70,11 +70,11 @@ public class CostGroup {
         this.budget = budget;
     }
 
-    public TodoList getCostList() {
+    public CostList getCostList() {
         return costList;
     }
 
-    public void setCostList(TodoList costList) {
+    public void setCostList(CostList costList) {
         this.costList = costList;
     }
 

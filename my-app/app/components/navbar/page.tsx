@@ -20,8 +20,7 @@ export default function Navbar() {
           Project
         </div>
         {/*Main redirects*/}
-        <div className="flex justify-self-end text-stark mt-8 h-20 text-4xl -right-0 w-4/12">
-          <Link href={"../protected/passwords"}>Passwords</Link>
+        <div className="flex justify-self-end text-stark mt-8 h-20 text-4xl right-0 w-4/12">
           <Link href={"../protected/tasklist"}>Tasklist</Link>
         </div>
         {/*Login*/}

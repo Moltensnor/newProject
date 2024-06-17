@@ -221,9 +221,11 @@ export default function ItemInfoPage({
         )}
       </div>
       <div className="flex justify-around pb-4">
-        <Button className="min-w-[90vh]" color="danger">
-          <Link href="./">Back</Link>
-        </Button>
+        <Link href="./">
+          <Button className="min-w-[90vh]" color="danger">
+            Back
+          </Button>
+        </Link>
         <Button
           className="min-w-[90vh]"
           color="success"

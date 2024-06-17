@@ -48,3 +48,82 @@ export type NewTask = {
     todoList: TaskList,
     complete: boolean,
 }
+
+export type CostList = {
+    id: number,
+    name: string,
+    date: string,
+    desription: string,
+    userEmail: string,
+    budget: number | undefined,
+}
+
+export type CostGroup = {
+    id: number,
+    name: string,
+    hexcode: string,
+    budget: number | undefined,
+    costList: CostList,
+}
+
+export type CostItem = {
+    id: number,
+    name: string,
+    description: string,
+    amount: number,
+    costGroup: CostGroup,
+    costList: CostList,
+}
+
+export type NewCostList = {
+    name: string,
+    date: string,
+    desription: string,
+    userEmail: string,
+    budget: number | undefined,
+}
+
+export type NewCostGroup = {
+    name: string,
+    hexcode: string,
+    budget: number | undefined,
+    costList: CostList,
+}
+
+export type NewCostItem = {
+    name: string,
+    description: string,
+    amount: number,
+    costGroup: CostGroup,
+    costList: CostList,
+}
+
+export type BudgetPair = {
+    first: number,
+    second: number,
+}
+
+export type CostGroupPair = {
+    first: CostGroup,
+    second: BudgetPair,
+}
+
+export type BudgetCostPair = {
+    first: number,
+    second: BudgetPair,
+}
+
+export type FullBudgetCostPair = {
+    first: CostGroup,
+    second: BudgetCostPair,
+}
+
+export type CostItemPair = {
+    first: CostItem,
+    second: number,
+}
+
+export type CostBudgetItemPair = {
+    first: CostItem,
+    second: BudgetPair
+}

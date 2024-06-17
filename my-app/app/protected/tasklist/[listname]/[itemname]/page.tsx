@@ -47,7 +47,7 @@ export default function ItemInfoPage({
     const headers = new Headers();
     headers.set(
       "Authorization",
-      "Basic " + Buffer.from("admin:password").toString("base64")
+      "Basic " + Buffer.from(process.env.DB_USERNAME + ":" + process.env.DB_PASSWORD).toString("base64")
     );
 
     if (Number.isNaN(weightNumber)) {
@@ -221,9 +221,11 @@ export default function ItemInfoPage({
         )}
       </div>
       <div className="flex justify-around pb-4">
-        <Button className="min-w-[90vh]" color="danger">
-          <Link href="./">Back</Link>
-        </Button>
+        <Link href="./">
+          <Button className="min-w-[90vh]" color="danger">
+            Back
+          </Button>
+        </Link>
         <Button
           className="min-w-[90vh]"
           color="success"

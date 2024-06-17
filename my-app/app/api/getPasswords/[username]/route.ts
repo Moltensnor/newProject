@@ -4,7 +4,7 @@ export async function GET(request: Request, context: any) {
     method: "GET",
     cache: "no-store",
     headers: new Headers({
-        "Authorization": 'Basic ' + btoa("admin:password")
+        "Authorization": 'Basic ' + btoa(process.env.DB_USERNAME + ":" + process.env.DB_PASSWORD)
     })
   })
 

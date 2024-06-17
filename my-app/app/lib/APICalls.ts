@@ -1,13 +1,14 @@
 const headers = new Headers();
   headers.set(
     "Authorization",
-    "Basic " + Buffer.from("admin:password").toString("base64")
+    "Basic " + Buffer.from(process.env.DB_USERNAME + ":" + process.env.DB_PASSWORD).toString("base64")
   );
   const postHeader = headers;
   postHeader.append("Content-Type", "application/json");
 
   export async function getRequestCall(url: string) {
     console.log(`Making a GET request to ${url}`)
+    console.log(process.env.DB_USERNAME + ":" + process.env.DB_PASSWORD)
     const req = await fetch(
         url ,
         {

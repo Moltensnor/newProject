@@ -36,29 +36,33 @@ export default function PriorityCard(props: any) {
         <Divider />
         <CardBody>
           <ScrollShadow hideScrollBar className="h-[55vh]">
-            {props
-              .tasks!.filter(
-                (t: Task) => t!.importance.importanceLevels == importanceLevel
-              )
-              .map((e: Task) => (
-                <Link
-                  key={e!.id}
-                  href={`/protected/tasklist/${e!.todoList.id}/${e!.id}`}
-                  className="hover:underline"
-                >
-                  <div className="flex flex-row min-w-[60vh] mb-1 justify-items-stretch">
-                    <p className="text-md justify-self-start">{e!.name}</p>
-                    <p className="text-md right-32 absolute">
-                      {e!.importance.weight}
-                    </p>
-                    {e!.complete ? (
-                      <p className="right-12 absolute text-green-500">Yes</p>
-                    ) : (
-                      <p className="right-[3.10rem] absolute text-red-500">No</p>
-                    )}
-                  </div>
-                </Link>
-              ))}
+            <div>
+              {props
+                .tasks!.filter(
+                  (t: Task) => t!.importance.importanceLevels == importanceLevel
+                )
+                .map((e: Task) => (
+                  <Link
+                    key={e!.id}
+                    href={`/protected/tasklist/${e!.todoList.id}/${e!.id}`}
+                    className="hover:underline"
+                  >
+                    <div className="flex flex-row min-w-[60vh] mb-1 justify-items-stretch">
+                      <p className="text-md justify-self-start">{e!.name}</p>
+                      <p className="text-md right-32 absolute">
+                        {e!.importance.weight}
+                      </p>
+                      {e!.complete ? (
+                        <p className="right-12 absolute text-green-500">Yes</p>
+                      ) : (
+                        <p className="right-[3.10rem] absolute text-red-500">
+                          No
+                        </p>
+                      )}
+                    </div>
+                  </Link>
+                ))}
+            </div>
           </ScrollShadow>
         </CardBody>
         <Divider />

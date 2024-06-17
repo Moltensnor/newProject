@@ -90,4 +90,37 @@ public class CostListService {
 
         return result;
     }
+
+    public Iterable<Pair<CostItem, Double>> countTotalItems(Long id) {
+        Iterable<CostItem> costItems = costItemService.findAll();
+        List<Pair<CostItem, Double>> result = new ArrayList<>();
+        Long listTotal = countTotalCostById(id);
+
+        costItems.forEach(
+                costItem -> {
+                    Double temp = ((double) costItem.getAmount() / listTotal);
+                    Double totalPercentage = (double) Math.round(temp * 100);
+                    result.add(Pair.of(costItem, totalPercentage));
+                }
+        );
+
+        return result;
+    }
+
+    public Iterable<Pair<CostItem, Pair<Double, Double>>> countTotalItemsWithBudget(Long id) {
+        CostList list = findById(id);
+        Iterable<CostItem> costItems = costItemService.findAll();
+        List<Pair<CostItem, Pair<Double, Double>>> result = new ArrayList<>();
+        Long listTotal = countTotalCostById(id);
+
+        costItems.forEach(
+                costItem -> {
+                    Double totalBudgetPercentage = (double) Math.round((float) costItem.getAmount() / list.getBudget()) * 100;
+                    Double totalPercentage = (double) Math.round((float) costItem.getAmount() / listTotal) * 100;
+                    result.add(Pair.of(costItem, Pair.of(totalPercentage, totalBudgetPercentage)));
+                }
+        );
+
+        return result;
+    }
 }

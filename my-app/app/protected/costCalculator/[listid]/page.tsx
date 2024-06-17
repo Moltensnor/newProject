@@ -1,12 +1,16 @@
 "use client";
 
-import BarChart from "@/app/components/barChart/page";
-import DoughnutChart from "@/app/components/doughnutChart/page";
-import PieChart from "@/app/components/pieChart/page";
-import PolarAreaChart from "@/app/components/polarAreaChart/page";
+import Chart from "@/app/components/chart/page";
 import { getRequestCall } from "@/app/lib/APICalls";
-import { CostGroupPair, CostItem, CostList } from "@/app/lib/types";
 import {
+  CostGroupPair,
+  CostItem,
+  CostItemPair,
+  CostList,
+} from "@/app/lib/types";
+import {
+  Autocomplete,
+  AutocompleteItem,
   Button,
   Card,
   CardBody,
@@ -16,7 +20,7 @@ import {
   Link,
   ScrollShadow,
 } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { Key, useEffect, useState } from "react";
 
 export default function ListInfoPage({
   params,
@@ -25,9 +29,14 @@ export default function ListInfoPage({
 }) {
   const [isLoading, setLoading] = useState(true);
   const [costList, setCostList] = useState<CostList>();
-  const [itemList, setItemList] = useState<[CostItem] | []>([]);
+  const [itemList, setItemList] = useState<[CostItemPair] | []>([]);
   const [costGroups, setCostGroups] = useState<[CostGroupPair] | []>([]);
   const [totalCost, setTotalCost] = useState(0);
+  const [graph, setGraph] = useState<Key>("Pie");
+
+  function handleSelectionChange(e: Key) {
+    setGraph(e);
+  }
 
   async function getList() {
     const req = await getRequestCall(
@@ -46,7 +55,8 @@ export default function ListInfoPage({
 
   async function getCostItems() {
     const req = await getRequestCall(
-      "http://localhost:8080/api/v1/costitem/list/" + params.listid
+      "http://localhost:8080/api/v1/costlist/countTotalItemsCost/" +
+        params.listid
     );
     setItemList(req);
   }
@@ -76,6 +86,9 @@ export default function ListInfoPage({
         </div>
         {costList?.name}
         <div className="flex justify-around gap-4">
+          <Link href={`/protected/costCalculator/${params.listid}/edit`}>
+          <Button color="warning">Edit list</Button>
+          </Link>
           <Link href={`/protected/costCalculator/${params.listid}/newgroup`}>
             <Button color="success">Add new group</Button>
           </Link>
@@ -90,13 +103,24 @@ export default function ListInfoPage({
           <CardHeader className="flex gap-3">
             <div className="flex flex-col">
               <p className="text-md">Items</p>
+              <p className="text-md right-[2vh] absolute">Total Percentage</p>
+              <p className="text-md right-[20vh] absolute">Cost</p>
             </div>
           </CardHeader>
           <Divider />
           <CardBody>
             <ScrollShadow hideScrollBar>
               {itemList!.map((costGroup) => (
-                <div key={costGroup.id}>{costGroup.name}</div>
+                <div
+                  key={costGroup.first.id}
+                  className="flex flex-row min-w-[60vh] mb-1 justify-items-stretch"
+                >
+                  <p className="justify-self-start">{costGroup.first.name}</p>
+                  <p className="right-[7vh] absolute">{costGroup.second}%</p>
+                  <p className="right-[18vh] absolute">
+                    {costGroup.first.amount}€
+                  </p>
+                </div>
               ))}
             </ScrollShadow>
           </CardBody>
@@ -142,14 +166,51 @@ export default function ListInfoPage({
           </CardFooter>
         </Card>
         <Card className="max-w-[400px] min-w-[95%] min-h-[90vh]">
-          <CardHeader className="flex gap-3">
+          <CardHeader className="flex gap-3 mb-4">
             <div className="flex flex-col">
-              <p className="text-md">Graphs</p>
+              <p className="text-md mt-4">Graphs</p>
+            </div>
+            <div className="right-[2vh] mt-4 absolute">
+              <Autocomplete
+                variant="bordered"
+                color="primary"
+                label="Select a graph style"
+                className="max-w-[40vh]"
+                onSelectionChange={setGraph}
+              >
+                <AutocompleteItem key={"Bar"} value={"Bar"}>
+                  Bar
+                </AutocompleteItem>
+                <AutocompleteItem key={"Doughnut"} value={"Doughnut"}>
+                  Doughnut
+                </AutocompleteItem>
+                <AutocompleteItem key={"Pie"} value={"Pie"}>
+                  Pie
+                </AutocompleteItem>
+                <AutocompleteItem key={"PolarArea"} value={"PolarArea"}>
+                  PolarArea
+                </AutocompleteItem>
+              </Autocomplete>
             </div>
           </CardHeader>
           <Divider />
           <CardBody>
-            <PolarAreaChart costGroups={costGroups} hasBudget={false}/>
+            <div className="flex flex-flow justify-around">
+              <Chart
+                costGroups={costGroups}
+                costItems={itemList}
+                hasBudget={false}
+                isGroup={true}
+                type={graph as string}
+              />
+              <Chart
+                costGroups={costGroups}
+                costItems={itemList}
+                hasBudget={false}
+                isGroup={false}
+                type={graph as string}
+              />
+            </div>
           </CardBody>
         </Card>
       </div>

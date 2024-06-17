@@ -1,6 +1,7 @@
 package com.project.demo.costcalculator.cost_list;
 
 import com.project.demo.costcalculator.cost_group.CostGroup;
+import com.project.demo.costcalculator.cost_item.CostItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
@@ -57,6 +58,15 @@ public class CostListController {
     @GetMapping(path = "/countTotalCost/budget/{id}")
     public Iterable<Pair<CostGroup, Pair<Long, Pair<Double, Double>>>> countTotalCostByBudget(@PathVariable Long id) {
         return service.countTotalCostWithBudgetByGroupId(id);
+    }
+
+    @GetMapping(path = "/countTotalItemsCost/{id}")
+    public Iterable<Pair<CostItem, Double>> countTotalItems(@PathVariable Long id) {
+        return service.countTotalItems(id);
+    }
+    @GetMapping(path = "/countTotalItemsCostBudget/{id}")
+    public Iterable<Pair<CostItem, Pair<Double, Double>>> countTotalItemsWithBudget(@PathVariable Long id) {
+        return service.countTotalItemsWithBudget(id);
     }
 
     @ExceptionHandler

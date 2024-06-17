@@ -8,6 +8,7 @@ const headers = new Headers();
 
   export async function getRequestCall(url: string) {
     console.log(`Making a GET request to ${url}`)
+    console.log(process.env.DB_USERNAME + ":" + process.env.DB_PASSWORD)
     const req = await fetch(
         url ,
         {

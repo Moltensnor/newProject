@@ -1,4 +1,4 @@
-import { addUser } from "@/app/lib/addUser"
+
 
 async function callback() {
     alert("Test")

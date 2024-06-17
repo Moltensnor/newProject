@@ -3,10 +3,12 @@
 import Chart from "@/app/components/chart/page";
 import { getRequestCall } from "@/app/lib/APICalls";
 import {
+  CostBudgetItemPair,
   CostGroupPair,
   CostItem,
   CostItemPair,
   CostList,
+  FullBudgetCostPair,
 } from "@/app/lib/types";
 import {
   Autocomplete,
@@ -31,19 +33,27 @@ export default function ListInfoPage({
   const [costList, setCostList] = useState<CostList>();
   const [itemList, setItemList] = useState<[CostItemPair] | []>([]);
   const [costGroups, setCostGroups] = useState<[CostGroupPair] | []>([]);
+  const [fullCostGroups, setFullCostGroups] = useState<
+    [FullBudgetCostPair] | []
+  >([]);
+  const [fullCostItems, setFullCostItems] = useState<[CostBudgetItemPair] | []>(
+    []
+  );
   const [totalCost, setTotalCost] = useState(0);
   const [graph, setGraph] = useState<Key>("Pie");
-
-  function handleSelectionChange(e: Key) {
-    setGraph(e);
-  }
+  const [percentage, setPercentage] = useState(100);
 
   async function getList() {
     const req = await getRequestCall(
       "http://localhost:8080/api/v1/costlist/" + params.listid
     );
     setCostList(req);
-    setLoading(false);
+    if (req.budget != 0) {
+      getFullCostGroups();
+      getFullCostItems();
+    }
+    getCostGroups();
+    getCostItems();
   }
 
   async function getCostGroups() {
@@ -51,6 +61,17 @@ export default function ListInfoPage({
       "http://localhost:8080/api/v1/costlist/countGroup/" + params.listid
     );
     setCostGroups(req);
+  }
+
+  async function getFullCostGroups() {
+    const req = await getRequestCall(
+      "http://localhost:8080/api/v1/costlist/countTotalCost/budget/" +
+        params.listid
+    );
+    let temp = 100
+    req.every((c: FullBudgetCostPair) => temp = temp - c.second.second.second)
+    setPercentage(100 - temp)
+    setFullCostGroups(req);
   }
 
   async function getCostItems() {
@@ -61,18 +82,25 @@ export default function ListInfoPage({
     setItemList(req);
   }
 
+  async function getFullCostItems() {
+    const req = await getRequestCall(
+      "http://localhost:8080/api/v1/costlist/countTotalItemsCostBudget/" +
+        params.listid
+    );
+    setFullCostItems(req);
+  }
+
   async function getTotalCost() {
     const req = await getRequestCall(
       "http://localhost:8080/api/v1/costlist/countTotalCost/" + params.listid
     );
     setTotalCost(req);
+    setLoading(false);
   }
 
   useEffect(() => {
-    getCostItems();
-    getCostGroups();
-    getTotalCost();
     getList();
+    getTotalCost();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -87,7 +115,7 @@ export default function ListInfoPage({
         {costList?.name}
         <div className="flex justify-around gap-4">
           <Link href={`/protected/costCalculator/${params.listid}/edit`}>
-          <Button color="warning">Edit list</Button>
+            <Button color="warning">Edit list</Button>
           </Link>
           <Link href={`/protected/costCalculator/${params.listid}/newgroup`}>
             <Button color="success">Add new group</Button>
@@ -105,6 +133,7 @@ export default function ListInfoPage({
               <p className="text-md">Items</p>
               <p className="text-md right-[2vh] absolute">Total Percentage</p>
               <p className="text-md right-[20vh] absolute">Cost</p>
+              <p className="text-md right-[45vh] absolute">Group</p>
             </div>
           </CardHeader>
           <Divider />
@@ -120,10 +149,28 @@ export default function ListInfoPage({
                   <p className="right-[18vh] absolute">
                     {costGroup.first.amount}€
                   </p>
+                  <div className="left-[35vh] absolute">
+                    <p>{costGroup.first.costGroup.name}</p>
+                  </div>
                 </div>
               ))}
             </ScrollShadow>
           </CardBody>
+          <Divider />
+          <CardFooter className="flex gap-3">
+            {costList!.budget == 0 ? (
+              <p className="text-md">No budget given</p>
+            ) : (
+              <>
+                <p className="text-md">Total budget: {costList!.budget}€</p>
+                <p className="text-md ml-[10vh]">
+                  Over: {costList!.budget! - totalCost} - {100 - percentage}%
+                </p>
+              </>
+            )}
+            <p className="text-md right-[7vh] absolute">100%</p>
+            <p className="text-md right-[18vh] absolute">{totalCost}€</p>
+          </CardFooter>
         </Card>
         <Card className="max-w-[400px] min-w-[45%] min-h-[60vh]">
           <CardHeader className="flex gap-3">
@@ -131,26 +178,61 @@ export default function ListInfoPage({
               <p className="text-md">Groups</p>
               <p className="text-md right-[2vh] absolute">Total Percentage</p>
               <p className="text-md right-[20vh] absolute">Cost</p>
+              {costList!.budget == 0 ? (
+                <p className="text-md"></p>
+              ) : (
+                <p className="text-md right-[28vh] absolute">
+                  Budget Percentage
+                </p>
+              )}
             </div>
           </CardHeader>
           <Divider />
           <CardBody>
             <ScrollShadow hideScrollBar>
               <div>
-                {costGroups!.map((costGroup) => (
-                  <div
-                    key={costGroup.first.id}
-                    className="flex flex-row min-w-[60vh] mb-1 justify-items-stretch"
-                  >
-                    <p className="justify-self-start">{costGroup.first.name}</p>
-                    <p className="right-[7vh] absolute">
-                      {costGroup.second.second}%
-                    </p>
-                    <p className="right-[18vh] absolute">
-                      {costGroup.second.first}€
-                    </p>
-                  </div>
-                ))}
+                {costList!.budget == 0 ? (
+                  <>
+                    {costGroups!.map((costGroup) => (
+                      <div
+                        key={costGroup.first.id}
+                        className="flex flex-row min-w-[60vh] mb-1 justify-items-stretch"
+                      >
+                        <p className="justify-self-start">
+                          {costGroup.first.name}
+                        </p>
+                        <p className="right-[7vh] absolute">
+                          {costGroup.second.second}%
+                        </p>
+                        <p className="right-[18vh] absolute">
+                          {costGroup.second.first}€
+                        </p>
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    {fullCostGroups!.map((costGroup) => (
+                      <div
+                        key={costGroup.first.id}
+                        className="flex flex-row min-w-[60vh] mb-1 justify-items-stretch"
+                      >
+                        <p className="justify-self-start">
+                          {costGroup.first.name}
+                        </p>
+                        <p className="right-[7vh] absolute">
+                          {costGroup.second.second.first}%
+                        </p>
+                        <p className="right-[18vh] absolute">
+                          {costGroup.second.first}€
+                        </p>
+                        <p className="right-[35vh] absolute">
+                          {costGroup.second.second.second}%
+                        </p>
+                      </div>
+                    ))}
+                  </>
+                )}
               </div>
             </ScrollShadow>
           </CardBody>
@@ -159,7 +241,12 @@ export default function ListInfoPage({
             {costList!.budget == 0 ? (
               <p className="text-md">No budget given</p>
             ) : (
-              <p className="text-md">Total budget: {costList!.budget}€</p>
+              <>
+                <p className="text-md">Total budget: {costList!.budget}€</p>
+                <p className="text-md text-md ml-[10vh]">
+                  Over: {costList!.budget! - totalCost} - {100 - percentage}%
+                </p>
+              </>
             )}
             <p className="text-md right-[7vh] absolute">100%</p>
             <p className="text-md right-[18vh] absolute">{totalCost}€</p>
@@ -195,21 +282,68 @@ export default function ListInfoPage({
           </CardHeader>
           <Divider />
           <CardBody>
-            <div className="flex flex-flow justify-around">
-              <Chart
-                costGroups={costGroups}
-                costItems={itemList}
-                hasBudget={false}
-                isGroup={true}
-                type={graph as string}
-              />
-              <Chart
-                costGroups={costGroups}
-                costItems={itemList}
-                hasBudget={false}
-                isGroup={false}
-                type={graph as string}
-              />
+            <div className="flex flex-wrap justify-around gap-y-[8vh]">
+              {costList!.budget == 0 ? (
+                <>
+                  <Chart
+                    costGroups={costGroups}
+                    costItems={itemList}
+                    fullCostGroups={[]}
+                    hasBudget={false}
+                    isGroup={true}
+                    type={graph as string}
+                    totalLeft={0}
+                  />
+                  <Chart
+                    costGroups={costGroups}
+                    costItems={itemList}
+                    fullCostGroups={[]}
+                    hasBudget={false}
+                    isGroup={false}
+                    type={graph as string}
+                    totalLeft={0}
+                  />
+                </>
+              ) : (
+                <>
+                  <Chart
+                    costGroups={costGroups}
+                    costItems={itemList}
+                    fullCostGroups={fullCostGroups}
+                    hasBudget={false}
+                    isGroup={true}
+                    type={graph as string}
+                    totalLeft={costList!.budget! - totalCost}
+                  />
+                  <Chart
+                    costGroups={costGroups}
+                    costItems={itemList}
+                    fullCostGroups={fullCostGroups}
+                    hasBudget={false}
+                    isGroup={false}
+                    type={graph as string}
+                    totalLeft={costList!.budget! - totalCost}
+                  />
+                  <Chart
+                    costGroups={costGroups}
+                    costItems={itemList}
+                    fullCostGroups={fullCostGroups}
+                    hasBudget={true}
+                    isGroup={true}
+                    type={graph as string}
+                    totalLeft={costList!.budget! - totalCost}
+                  />
+                  <Chart
+                    costGroups={costGroups}
+                    costItems={itemList}
+                    fullCostGroups={fullCostGroups}
+                    hasBudget={true}
+                    isGroup={false}
+                    type={graph as string}
+                    totalLeft={costList!.budget! - totalCost}
+                  />
+                </>
+              )}
             </div>
           </CardBody>
         </Card>

@@ -122,3 +122,8 @@ export type CostItemPair = {
     first: CostItem,
     second: number,
 }
+
+export type CostBudgetItemPair = {
+    first: CostItem,
+    second: BudgetPair
+}

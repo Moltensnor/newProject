@@ -1,7 +1,7 @@
 "use client";
 
 import Chart from "@/app/components/chart/page";
-import { getRequestCall } from "@/app/lib/APICalls";
+import { deleteRequestCall, getRequestCall } from "@/app/lib/APICalls";
 import {
   CostBudgetItemPair,
   CostGroupPair,
@@ -22,6 +22,7 @@ import {
   Link,
   ScrollShadow,
 } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 import { Key, useEffect, useState } from "react";
 
 export default function ListInfoPage({
@@ -30,6 +31,7 @@ export default function ListInfoPage({
   params: { listid: string };
 }) {
   const [isLoading, setLoading] = useState(true);
+  const [listLoading, setListLoading] = useState(true);
   const [costList, setCostList] = useState<CostList>();
   const [itemList, setItemList] = useState<[CostItemPair] | []>([]);
   const [costGroups, setCostGroups] = useState<[CostGroupPair] | []>([]);
@@ -42,6 +44,7 @@ export default function ListInfoPage({
   const [totalCost, setTotalCost] = useState(0);
   const [graph, setGraph] = useState<Key>("Pie");
   const [percentage, setPercentage] = useState(100);
+  const router = useRouter();
 
   async function getList() {
     const req = await getRequestCall(
@@ -54,6 +57,7 @@ export default function ListInfoPage({
     }
     getCostGroups();
     getCostItems();
+    setListLoading(false);
   }
 
   async function getCostGroups() {
@@ -68,9 +72,11 @@ export default function ListInfoPage({
       "http://localhost:8080/api/v1/costlist/countTotalCost/budget/" +
         params.listid
     );
-    let temp = 100
-    req.every((c: FullBudgetCostPair) => temp = temp - c.second.second.second)
-    setPercentage(100 - temp)
+    let temp = 100;
+    req.every(
+      (c: FullBudgetCostPair) => (temp = temp - c.second.second.second)
+    );
+    setPercentage(100 - temp);
     setFullCostGroups(req);
   }
 
@@ -98,21 +104,28 @@ export default function ListInfoPage({
     setLoading(false);
   }
 
+  function deleteList() {
+    deleteRequestCall("http://localhost:8080/api/v1/costlist/" + params.listid);
+    router.push("./");
+  }
+
   useEffect(() => {
     getList();
     getTotalCost();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading || listLoading) return <div>Loading...</div>;
 
   return (
     <>
       <div className="mt-[2vh] mb-[2vh] flex justify-between ml-[5vh] mr-[5vh]">
         <div>
-          <Button color="danger">Back</Button>
+          <Link href="./">
+            <Button color="danger">Back</Button>
+          </Link>
         </div>
-        {costList?.name}
+        <h1 className="ml-[45vh] text-4xl">{costList?.name}</h1>
         <div className="flex justify-around gap-4">
           <Link href={`/protected/costCalculator/${params.listid}/edit`}>
             <Button color="warning">Edit list</Button>
@@ -123,7 +136,9 @@ export default function ListInfoPage({
           <Link href={`/protected/costCalculator/${params.listid}/newitem`}>
             <Button color="success">Add new item</Button>
           </Link>
-          <Button color="danger">Delete list</Button>
+          <Button onClick={() => deleteList()} color="danger">
+            Delete list
+          </Button>
         </div>
       </div>
       <div className="flex flex-row justify-around flex-wrap gap-y-[2vh] mb-[2vh]">
@@ -142,9 +157,15 @@ export default function ListInfoPage({
               {itemList!.map((costGroup) => (
                 <div
                   key={costGroup.first.id}
-                  className="flex flex-row min-w-[60vh] mb-1 justify-items-stretch"
+                  className="text-md flex flex-row min-w-[60vh] mb-1 justify-items-stretch hover:underline text-black"
                 >
-                  <p className="justify-self-start">{costGroup.first.name}</p>
+                  <Link
+                    href={`/protected/costCalculator/${params.listid}/item/${costGroup.first.id}`}
+                  >
+                    <p className="justify-self-start text-black">
+                      {costGroup.first.name}
+                    </p>
+                  </Link>
                   <p className="right-[7vh] absolute">{costGroup.second}%</p>
                   <p className="right-[18vh] absolute">
                     {costGroup.first.amount}€
@@ -196,14 +217,19 @@ export default function ListInfoPage({
                     {costGroups!.map((costGroup) => (
                       <div
                         key={costGroup.first.id}
-                        className="flex flex-row min-w-[60vh] mb-1 justify-items-stretch"
+                        className="flex flex-row min-w-[60vh] mb-1 justify-items-stretch hover:underline"
                       >
-                        <p className="justify-self-start">
-                          {costGroup.first.name}
-                        </p>
+                        <Link
+                          href={`/protected/costCalculator/${params.listid}/group/${costGroup.first.id}`}
+                        >
+                          <p className="justify-self-start">
+                            {costGroup.first.name}
+                          </p>
+                        </Link>
                         <p className="right-[7vh] absolute">
                           {costGroup.second.second}%
                         </p>
+
                         <p className="right-[18vh] absolute">
                           {costGroup.second.first}€
                         </p>
@@ -215,11 +241,15 @@ export default function ListInfoPage({
                     {fullCostGroups!.map((costGroup) => (
                       <div
                         key={costGroup.first.id}
-                        className="flex flex-row min-w-[60vh] mb-1 justify-items-stretch"
+                        className="flex flex-row min-w-[60vh] mb-1 justify-items-stretch hover:underline"
                       >
-                        <p className="justify-self-start">
-                          {costGroup.first.name}
-                        </p>
+                        <Link
+                          href={`/protected/costCalculator/${params.listid}/group/${costGroup.first.id}`}
+                        >
+                          <p className="justify-self-start">
+                            {costGroup.first.name}
+                          </p>
+                        </Link>
                         <p className="right-[7vh] absolute">
                           {costGroup.second.second.first}%
                         </p>

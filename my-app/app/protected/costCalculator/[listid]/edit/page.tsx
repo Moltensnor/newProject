@@ -46,9 +46,9 @@ export default function EditCostListPage({
       "http://localhost:8080/api/v1/costlist/" + params.listid
     );
     setCostList(req);
-    setNameInput(req.name)
-    setBudgetInput(req.budget)
-    setDescription(req.description)
+    setNameInput(req.name);
+    setBudgetInput(req.budget);
+    setDescription(req.description);
     setLoading(false);
   }
 
@@ -88,9 +88,11 @@ export default function EditCostListPage({
         />
       </div>
       <div className="flex justify-around">
-        <Button className="min-w-[90vh]" color="danger">
-          <Link href="./">Back</Link>
-        </Button>
+        <Link href="./">
+          <Button className="min-w-[90vh]" color="danger">
+            Back
+          </Button>
+        </Link>
         <Button
           className="min-w-[90vh]"
           color="success"

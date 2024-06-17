@@ -41,6 +41,12 @@ public class CostListService {
     }
 
     public void deleteById(Long id) {
+        Iterable<CostItem> costItems = costItemService.findByCostListId(id);
+        Iterable<CostGroup> costGroups = costGroupService.findByCostListId(id);
+
+        costItems.forEach(costItem -> costItemService.deleteById(costItem.getId()));
+        costGroups.forEach(costGroup -> costGroupService.deleteById(costGroup.getId()));
+
         repository.deleteById(id);
     }
 
@@ -92,7 +98,7 @@ public class CostListService {
     }
 
     public Iterable<Pair<CostItem, Double>> countTotalItems(Long id) {
-        Iterable<CostItem> costItems = costItemService.findAll();
+        Iterable<CostItem> costItems = costItemService.findByCostListId(id);
         List<Pair<CostItem, Double>> result = new ArrayList<>();
         Long listTotal = countTotalCostById(id);
 

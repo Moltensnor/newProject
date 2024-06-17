@@ -78,7 +78,7 @@ export default function Chart(props: {
         labels: temp.map((c) => c.first.name),
         datasets: [
           {
-            label: "Cost Bar Chart",
+            label: "Amount",
             data: temp.map((c) => c.second.first),
             backgroundColor: temp.map((c) => c.first.hexcode),
             borderWidth: 2,
@@ -90,7 +90,7 @@ export default function Chart(props: {
         labels: props.costGroups.map((c) => c.first.name),
         datasets: [
           {
-            label: "Cost Bar Chart",
+            label: "Amount",
             data: props.costGroups.map((c) => c.second.first),
             backgroundColor: props.costGroups.map((c) => c.first.hexcode),
             borderWidth: 2,
@@ -139,7 +139,7 @@ export default function Chart(props: {
         labels: temp.map((c) => c.first.name),
         datasets: [
           {
-            label: "Cost Bar Chart",
+            label: "Amount",
             data: temp.map((c) => c.first.amount),
             backgroundColor: COLORS,
             borderWidth: 2,
@@ -151,7 +151,7 @@ export default function Chart(props: {
         labels: props.costItems.map((c) => c.first.name),
         datasets: [
           {
-            label: "Cost Bar Chart",
+            label: "Amount",
             data: props.costItems.map((c) => c.first.amount),
             backgroundColor: COLORS,
             borderWidth: 2,

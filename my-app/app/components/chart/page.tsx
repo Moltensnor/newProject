@@ -42,9 +42,9 @@ export default function Chart(props: {
     let r = parseInt(hexcode.substring(0, 2), 16);
     let g = parseInt(hexcode.substring(2, 4), 16);
     let b = parseInt(hexcode.substring(4, 6), 16);
-    let randomR = Math.abs(_.random(0,1) * 40 + (r - 20));
-    let randomG = Math.abs(_.random(0,1)  * 40 + (g - 20));
-    let randomB = Math.abs(_.random(0,1)  * 40 + (b - 20));
+    let randomR = Math.abs(_.random(0,1) * 80 + (r - 40));
+    let randomG = Math.abs(_.random(0,1)  * 80 + (g - 40));
+    let randomB = Math.abs(_.random(0,1)  * 80 + (b - 40));
     return (
       "#" + ((1 << 24) + (randomR << 16) + (randomG << 8) + randomB).toString(16).slice(1)
     );

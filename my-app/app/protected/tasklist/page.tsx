@@ -27,7 +27,7 @@ export default function TasklistHomePage() {
     const headers = new Headers();
     headers.set(
       "Authorization",
-      "Basic " + Buffer.from("admin:password").toString("base64")
+      "Basic " + Buffer.from(process.env.DB_USERNAME + ":" + process.env.DB_PASSWORD).toString("base64")
     );
 
     const req = await fetch("http://localhost:8080/api/v1/todolist/", {

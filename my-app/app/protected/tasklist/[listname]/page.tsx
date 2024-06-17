@@ -19,7 +19,7 @@ export default function Tasklist({ params }: { params: { listname: string } }) {
   const headers = new Headers();
   headers.set(
     "Authorization",
-    "Basic " + Buffer.from("admin:password").toString("base64")
+    "Basic " + Buffer.from(process.env.DB_USERNAME + ":" + process.env.DB_PASSWORD).toString("base64")
   );
 
   async function deleteList() {
